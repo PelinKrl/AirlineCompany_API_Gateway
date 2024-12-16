@@ -1,7 +1,7 @@
 # AirlineCompany_API_Gateway
-# Table of Contents
-Introduction
-Project Design
+#Table of Contents
+* Introduction
+* Project Design
 Assumptions
 Issues Encountered
 Demo Video
