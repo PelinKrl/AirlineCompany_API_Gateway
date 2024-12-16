@@ -1,5 +1,5 @@
 # AirlineCompany_API_Gateway
-Table of Contents
+# Table of Contents
 Introduction
 Project Design
 Assumptions
