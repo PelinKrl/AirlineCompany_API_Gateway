@@ -1,4 +1,4 @@
-AirlineCompany_API_Gateway
+# AirlineCompany_API_Gateway
 Table of Contents
 Introduction
 Project Design
@@ -7,39 +7,29 @@ Issues Encountered
 Demo Video
 Source Code
 Introduction
-This project implements an API Gateway using Node.js and http-proxy-middleware. The gateway:
+This project implements an API Gateway using Node.js and http-proxy-middleware. The gateway acts as a proxy server to manage and forward API requests to a backend airline system. It includes the following endpoints:
 
-Manages and forwards API requests to a backend airline system.
-Adds authorization headers for secure communication.
-Handles proper body formatting for POST requests.
-Endpoints:
-GET /flights → Query flight details.
-POST /book → Book a ticket with required details.
-POST /checkin → Check-in for a booked ticket.
+GET /flights: Query flight details.
+POST /book: Book a ticket with required details.
+POST /checkin: Check-in for a booked ticket.
+The gateway adds authorization headers to secure communication and ensures proper body handling for POST requests.
+
 Project Design
-Technologies Used:
+Technologies Used
 Node.js: JavaScript runtime environment.
 Express.js: Web framework for creating HTTP server.
 http-proxy-middleware: Middleware for creating a proxy server.
-Body-parser: Middleware for parsing JSON request bodies.
-Code Structure:
-fixRequestBody Function:
-Ensures POST requests forward the correct JSON body to the backend.
+Body-parser: Middleware to handle JSON body parsing.
+Code Structure
+fixRequestBody Function: Ensures POST requests forward the correct JSON body to the backend.
 Routes:
-Route	Method	Target Endpoint
-/flights	GET	/v1/Flight/QueryFlights
-/book	POST	/v1/Ticket/Book
-/checkin	POST	/v1/Ticket/CheckIn
+/flights → GET → Proxies to /v1/Flight/QueryFlights.
+/book → POST → Proxies to /v1/Ticket/Book.
+/checkin → POST → Proxies to /v1/Ticket/CheckIn.
 Assumptions
-Backend APIs are hosted at:
-https://airlinecompanyapi20241128160828.azurewebsites.net
-
-Authorization Token:
-All requests require a Bearer Authorization Token.
-
-/book Endpoint:
-The body must include:
-
+Backend APIs are hosted at https://airlinecompanyapi20241128160828.azurewebsites.net.
+The backend requires a Bearer Authorization Token for all requests.
+The /book endpoint requires a structured JSON body:
 json
 Copy code
 {
@@ -47,25 +37,19 @@ Copy code
   "passengerFullName": "John Doe",
   "bookingDate": "2024-12-15T10:00:00Z"
 }
-/checkin Endpoint:
-The body must be a raw integer:
-
-Copy code
-1
+The /checkin endpoint expects a raw integer in the request body.
 Issues Encountered
-1. POST Body Forwarding
-Issue: http-proxy-middleware does not forward POST bodies by default.
+POST Body Forwarding:
+http-proxy-middleware does not automatically forward the body for POST requests.
 Solution: Created a helper function fixRequestBody to stringify and forward the body explicitly.
-2. Content-Type Mismatch
-Issue: The backend rejected incorrect Content-Type headers.
-Solution: Set:
-application/json → For structured JSON bodies (e.g., /book).
-text/plain → For raw integer bodies (e.g., /checkin).
-3. Timeouts
-Issue: Requests timed out due to body streaming issues.
-Solution:
-Properly set Content-Length.
-Used proxyReq.write() to explicitly forward request bodies.
+
+Content-Type Mismatch:
+The backend rejected incorrect Content-Type headers.
+Solution: Set Content-Type as application/json or text/plain based on the endpoint.
+
+Timeouts:
+Initially, some requests timed out due to body streaming issues.
+Solution: Properly set Content-Length and use proxyReq.write() for body transmission.
+
 Demo Video
-Watch the project demo here:
-https://youtu.be/bh_1ChBmjpQ
+Watch the project demo here: https://youtu.be/bh_1ChBmjpQ
